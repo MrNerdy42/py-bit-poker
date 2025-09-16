@@ -10,21 +10,20 @@ def get_hand():
     return hand
     
 def get_n_of_kinds(hand):
-    rank_mask = 0xF << 48
+    rank_mask = 0xF
     n_of_kinds = []
     for i in range(13):
         rank = hand & rank_mask
         count = count_set_bits(rank)
         if count > 1:
-            n_of_kinds.append((13 - i, count))
+            n_of_kinds.append((i + 1, count))
         if len(n_of_kinds) == 2 or (len(n_of_kinds) == 1 and n_of_kinds[0][1] == 4):
             break
-        rank_mask = rotate_mask_right(rank_mask, 4, 52)
+        rank_mask = rotate_mask_left(rank_mask, 4, 52)
     return n_of_kinds
 
 def get_strait(hand):
     pass
-
 
 def reduce_to_ranks(hand):
     rank_mask = 0xF << 48
@@ -34,7 +33,9 @@ def reduce_to_ranks(hand):
         if rank > 1:
             ranks = ranks & (1 << i)
 
-        
+def print_hand(hand):
+    print("{:052b}".format(hand)[:52])
+
 
 """Bit twiddling utils"""
         
@@ -60,14 +61,10 @@ def rotate_mask_left(n, shift, wrap_length):
     n = n & wrap_mask | big_end
     return n
 
-
 def get_full_bitmask(length):
     return int("1" * length, 2)
 
-def print_hand(hand):
-    print("{:052b}".format(hand))
 
 """main"""
-hand = 0xF000000000000
-
+hand = 0xF00000000000F
 print(get_n_of_kinds(hand))
