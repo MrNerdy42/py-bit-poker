@@ -10,16 +10,16 @@ def get_hand():
     return hand
     
 def get_n_of_kinds(hand):
-    rank_mask = 0xF
+    rank_mask = 0xF << 48
     n_of_kinds = []
     for i in range(13):
         rank = hand & rank_mask
         count = count_set_bits(rank)
         if count > 1:
-            n_of_kinds.append((i + 1, count))
+            n_of_kinds.append((13 - i, count))
         if len(n_of_kinds) == 2 or (len(n_of_kinds) == 1 and n_of_kinds[0][1] == 4):
             break
-        rank_mask = rotate_mask_left(rank_mask, 4, 52)
+        rank_mask = rotate_mask_right(rank_mask, 4, 52)
     return n_of_kinds
 
 def get_strait(hand):
