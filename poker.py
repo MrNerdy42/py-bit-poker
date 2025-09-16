@@ -1,4 +1,5 @@
 import random
+
 def get_hand():
     hand = 0
     for i in range(0, 5):
@@ -6,14 +7,18 @@ def get_hand():
         hand = hand | (1 << shift)
     return hand
     
-def has_n_of_a_kind(hand):
-    rank_mask = 0xF0000000000000
-    for i in range(14, 0, -1):
+def get_n_of_kinds(hand):
+    rank_mask = 0xF << 48
+    n_of_kinds = []
+    for i in range(13):
         rank = hand & rank_mask
         count = count_set_bits(rank)
         if count > 1:
-            return i, count
+            n_of_kinds.append((13 - i, count))
+        if len(n_of_kinds) == 2 or (len(n_of_kinds) == 1 and n_of_kinds[0][1] == 4):
+            break
         rank_mask = rotate_mask_right(rank_mask, 4, 52)
+    return n_of_kinds
         
 def count_set_bits(n):
     s = 0
@@ -35,6 +40,6 @@ def get_full_bitmask(length):
 def print_hand(hand):
     print("{:052b}".format(hand))
 
-hand = 0b0110000001000000000010000000000000000100000000000000
-print_hand(hand)
-print(has_n_of_a_kind(hand))
+hand = 0xF000000000000
+
+print(get_n_of_kinds(hand))
