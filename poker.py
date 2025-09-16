@@ -26,12 +26,14 @@ def get_strait(hand):
     pass
 
 def reduce_to_ranks(hand):
-    rank_mask = 0xF << 48
+    rank_mask = 0xF
     ranks = 0
     for i in range(13):
-        rank = (hand & rank_mask) >> (i*4)
-        if rank > 1:
+        rank = hand & rank_mask
+        if rank:
             ranks = ranks & (1 << i)
+    rotate_mask_left(rank_mask, 4, 52)
+    return ranks
 
 def print_hand(hand):
     print("{:052b}".format(hand)[:52])
@@ -66,5 +68,5 @@ def get_full_bitmask(length):
 
 
 """main"""
-hand = 0xF00000000000F
+hand = 0x0000030000003
 print(get_n_of_kinds(hand))
