@@ -52,6 +52,15 @@ def rotate_mask_right(n, shift, wrap_length):
     n = n | little_end
     return n
 
+def rotate_mask_left(n, shift, wrap_length):
+    wrap_mask = get_full_bitmask(wrap_length)
+    big_end = n & get_full_bitmask(shift) << (wrap_length - shift)
+    big_end = big_end >> (wrap_length - shift)
+    n = n << shift
+    n = n & wrap_mask | big_end
+    return n
+
+
 def get_full_bitmask(length):
     return int("1" * length, 2)
 
