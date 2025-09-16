@@ -1,5 +1,7 @@
 import random
 
+"""Actual poker stuff"""
+
 def get_hand():
     hand = 0
     for i in range(0, 5):
@@ -19,6 +21,22 @@ def get_n_of_kinds(hand):
             break
         rank_mask = rotate_mask_right(rank_mask, 4, 52)
     return n_of_kinds
+
+def get_strait(hand):
+    pass
+
+
+def reduce_to_ranks(hand):
+    rank_mask = 0xF << 48
+    ranks = 0
+    for i in range(13):
+        rank = (hand & rank_mask) >> (i*4)
+        if rank > 1:
+            ranks = ranks & (1 << i)
+
+        
+
+"""Bit twiddling utils"""
         
 def count_set_bits(n):
     s = 0
@@ -40,6 +58,7 @@ def get_full_bitmask(length):
 def print_hand(hand):
     print("{:052b}".format(hand))
 
+"""main"""
 hand = 0xF000000000000
 
 print(get_n_of_kinds(hand))
