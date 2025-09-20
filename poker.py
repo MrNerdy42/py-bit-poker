@@ -13,6 +13,7 @@ def get_hand():
     return hand
     
 def get_n_of_kinds(hand):
+    kicker_mask = 0
     rank_mask = 0xF << 48
     n_of_kinds = []
     for i in range(13):
@@ -20,10 +21,11 @@ def get_n_of_kinds(hand):
         count = count_set_bits(rank)
         if count > 1:
             n_of_kinds.append((13 - i, count))
+            kicker_mask = kicker_mask | rank_mask
         if len(n_of_kinds) == 2 or (len(n_of_kinds) == 1 and n_of_kinds[0][1] == 4):
             break
         rank_mask = rank_mask >> 4
-    return n_of_kinds
+    return (n_of_kinds, kicker_mask)
 
 def get_straight(hand):
     ranks = reduce_to_ranks(hand)
