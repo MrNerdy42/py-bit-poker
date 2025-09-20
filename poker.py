@@ -1,5 +1,8 @@
 import random
 
+SUITS = ('C','D','H','S')
+RANKS = ('A','K','Q','J','10','9','8','7','6','5','4','3','2','1')
+
 """Actual poker stuff"""
 
 def get_hand():
@@ -19,7 +22,7 @@ def get_n_of_kinds(hand):
             n_of_kinds.append((13 - i, count))
         if len(n_of_kinds) == 2 or (len(n_of_kinds) == 1 and n_of_kinds[0][1] == 4):
             break
-        rank_mask = rotate_mask_right(rank_mask, 4, 52)
+        rank_mask = rank_mask >> 4
     return n_of_kinds
 
 def get_straight(hand):
@@ -28,10 +31,17 @@ def get_straight(hand):
     for i in range(9):
         if ranks & straight_mask == straight_mask:
             return 13 - i
-        straight_mask = rotate_mask_right(straight_mask, 1, 13)
+        straight_mask = straight_mask >> 1
     return 0
 
-def get_flush(hand)
+def get_flush(hand):
+    suit_mask = 0x8888888888888
+    for i in range(4):
+        suit = hand & suit_mask
+        if count_set_bits(suit) >= 5:
+            return 4 - i
+        suit_mask = suit_mask >> 1
+    return 0
 
 def reduce_to_ranks(hand):
     rank_mask = 0xF << 48
@@ -42,7 +52,7 @@ def reduce_to_ranks(hand):
             ranks = ranks | 1
         if i < 12:
             ranks = ranks << 1
-        rank_mask = rotate_mask_right(rank_mask, 4, 52)
+        rank_mask = rank_mask >> 4
     return ranks
 
 def print_hand(hand):
@@ -57,21 +67,6 @@ def count_set_bits(n):
         n &= n-1
         s += 1
     return s
-    
-def rotate_mask_right(n, shift, wrap_length):
-    little_end = n & get_full_bitmask(shift)
-    little_end = little_end << (wrap_length - shift)
-    n = n >> shift
-    n = n | little_end
-    return n
-
-def rotate_mask_left(n, shift, wrap_length):
-    wrap_mask = get_full_bitmask(wrap_length)
-    big_end = n & get_full_bitmask(shift) << (wrap_length - shift)
-    big_end = big_end >> (wrap_length - shift)
-    n = n << shift
-    n = n & wrap_mask | big_end
-    return n
 
 def get_full_bitmask(length):
     return int("1" * length, 2)
@@ -79,5 +74,5 @@ def get_full_bitmask(length):
 
 """main"""
 # hand = 0x0000030000003
-hand = 0x0000000110110
-print(get_straight(hand))
+hand = 0x1717110711171
+print(get_flush(hand))
