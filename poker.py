@@ -4,7 +4,7 @@ import random
 
 def get_hand():
     hand = 0
-    for i in range(0, 5):
+    for i in range(5):
         shift = random.randint(0, 51) 
         hand = hand | (1 << shift)
     return hand
@@ -22,8 +22,16 @@ def get_n_of_kinds(hand):
         rank_mask = rotate_mask_right(rank_mask, 4, 52)
     return n_of_kinds
 
-def get_strait(hand):
-    pass
+def get_straight(hand):
+    ranks = reduce_to_ranks(hand)
+    straight_mask = 0x1F << 8
+    for i in range(9):
+        if ranks & straight_mask == straight_mask:
+            return 13 - i
+        straight_mask = rotate_mask_right(straight_mask, 1, 13)
+    return 0
+
+def get_flush(hand)
 
 def reduce_to_ranks(hand):
     rank_mask = 0xF << 48
@@ -71,5 +79,5 @@ def get_full_bitmask(length):
 
 """main"""
 # hand = 0x0000030000003
-hand = 0xFFFFFFFFFFFFF
-print_hand(reduce_to_ranks(hand))
+hand = 0x0000000110110
+print(get_straight(hand))
