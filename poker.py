@@ -1,4 +1,12 @@
-import random
+import math, random
+
+"""
+Ranks
+
+1-13: High card
+14-26: Pair
+27-183: two pair
+"""
 
 SUITS = ('C','D','H','S')
 RANKS = ('A','K','Q','J','10','9','8','7','6','5','4','3','2','1')
@@ -45,6 +53,10 @@ def get_flush(hand):
         suit_mask = suit_mask >> 1
     return 0
 
+def get_high_card(hand):
+    ranks = reduce_to_ranks(hand)
+    return ranks.bit_length()-1
+
 def reduce_to_ranks(hand):
     rank_mask = 0xF << 48
     ranks = 0
@@ -57,9 +69,16 @@ def reduce_to_ranks(hand):
         rank_mask = rank_mask >> 4
     return ranks
 
-def print_hand(hand):
-    print("{:052b}".format(hand)[:52])
 
+def rank_hand(hand):
+    n_of_kinds = get_n_of_kinds(hand)
+    rank = 0
+    if len(n_of_kinds) == 2:
+        pass
+    else:
+        rank = n_of_kinds[0] << ((n_of_kinds[1] - 1) * 4)
+
+1, 2, 3, 6, 7
 
 """Bit twiddling utils"""
         
