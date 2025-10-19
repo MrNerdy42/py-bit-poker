@@ -26,7 +26,7 @@ def get_n_of_kinds(hand):
     n_of_kinds = []
     for i in range(13):
         rank = hand & rank_mask
-        count = count_set_bits(rank)
+        count = rank.bit_count()
         if count > 1:
             n_of_kinds.append((13 - i, count))
             kicker_mask = kicker_mask | rank_mask
@@ -48,7 +48,7 @@ def get_flush(hand):
     suit_mask = 0x8888888888888
     for i in range(4):
         suit = hand & suit_mask
-        if count_set_bits(suit) >= 5:
+        if suit.bit_count() >= 5:
             return 4 - i
         suit_mask = suit_mask >> 1
     return 0
@@ -78,16 +78,7 @@ def rank_hand(hand):
     else:
         rank = n_of_kinds[0] << ((n_of_kinds[1] - 1) * 4)
 
-1, 2, 3, 6, 7
-
 """Bit twiddling utils"""
-        
-def count_set_bits(n):
-    s = 0
-    while(n):
-        n &= n-1
-        s += 1
-    return s
 
 def get_full_bitmask(length):
     return int("1" * length, 2)
@@ -96,4 +87,4 @@ def get_full_bitmask(length):
 """main"""
 # hand = 0x0000030000003
 hand = 0x1717110711171
-print(get_flush(hand))
+print(get_n_of_kinds(hand))
