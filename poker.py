@@ -2,10 +2,18 @@ import math, random
 
 """
 Ranks
-
-1-13: High card
-14-26: Pair
-27-183: two pair
+(
+high card,
+one pair,
+two pair,
+three-of-a-kind,
+straight,
+flush,
+full-house (double)
+full-house (triple),
+four-of-a-kind,
+straight-flush
+)
 """
 
 SUITS = ('C','D','H','S')
@@ -70,13 +78,16 @@ def reduce_to_ranks(hand):
     return ranks
 
 
-def rank_hand(hand):
+def rank_n_of_kinds(hand):
     n_of_kinds = get_n_of_kinds(hand)
-    rank = 0
     if len(n_of_kinds) == 2:
-        pass
+        rank = 0
+        for n in n_of_kinds:
+            rank = rank & 
+        return rank
     else:
-        rank = n_of_kinds[0] << ((n_of_kinds[1] - 1) * 4)
+        return n_of_kinds[0] << ((n_of_kinds[1] - 1) * 4)
+
 
 """Bit twiddling utils"""
 
