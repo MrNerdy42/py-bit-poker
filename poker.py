@@ -25,8 +25,6 @@ STRAIGHT_FLUSH_OFFSET = 41
 SUITS = ('C','D','H','S')
 RANKS = ('A','K','Q','J','10','9','8','7','6','5','4','3','2','1')
 
-"""Actual poker stuff"""
-
 def get_hand():
     hand = 0
     for i in range(5):
@@ -102,14 +100,11 @@ def rank_n_of_kinds(hand):
         rank |= (n_of_kinds[2][0] << PAIR_OFFSET)
 
 
-
-"""Bit twiddling utils"""
-
 def get_full_bitmask(length):
     return int("1" * length, 2)
 
 
-"""main"""
-# hand = 0x0000030000003
-hand = 0x1717110711171
-print(get_n_of_kinds(hand))
+if __name__ == "__main__":
+    # hand = 0x0000030000003
+    hand = 0x1717110711171
+    print(get_n_of_kinds(hand))
