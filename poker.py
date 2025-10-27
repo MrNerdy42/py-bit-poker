@@ -22,8 +22,8 @@ FULL_HOUSE_THREE_OFFSET = 46
 FOUR_OF_KIND_OFFSET = 50
 STRAIGHT_FLUSH_OFFSET = 41
 
-SUITS = ('C','D','H','S')
-RANKS = ('A','K','Q','J','10','9','8','7','6','5','4','3','2','1')
+SUITS = ('c','d','h','s')
+RANKS = ('A','K','Q','J','10','9','8','7','6','5','4','3','2')
 
 def get_hand():
     hand = 0
@@ -103,8 +103,17 @@ def rank_n_of_kinds(hand):
 def get_full_bitmask(length):
     return int("1" * length, 2)
 
+def get_hand_string(hand):
+    hand_string = ""
+    mask = 1 << 51
+    for i in range(52):
+        print("{:0b}".format(mask))
+        print(i//4)
+        if hand & mask:
+            hand_string += RANKS[i//4] + SUITS[i%4]
+        mask >>= 1
+    return hand_string
 
 if __name__ == "__main__":
-    # hand = 0x0000030000003
-    hand = 0x1717110711171
-    print(get_n_of_kinds(hand))
+    hand = 0xFFFFFFFFFFFFF
+    print(get_hand_string(hand))
