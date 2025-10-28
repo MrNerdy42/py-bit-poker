@@ -22,7 +22,7 @@ FULL_HOUSE_THREE_OFFSET = 46
 FOUR_OF_KIND_OFFSET = 50
 STRAIGHT_FLUSH_OFFSET = 41
 
-SUITS = ('c','d','h','s')
+SUITS = ('♣','♦','♥','♠')
 RANKS = ('A','K','Q','J','10','9','8','7','6','5','4','3','2')
 
 def get_hand():
