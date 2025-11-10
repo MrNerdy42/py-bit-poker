@@ -23,7 +23,7 @@ FOUR_OF_KIND_OFFSET = 50
 STRAIGHT_FLUSH_OFFSET = 41
 
 SUITS = ('♣','♦','♥','♠')
-RANKS = ('A','K','Q','J','10','9','8','7','6','5','4','3','2')
+RANKS = ('A','K','Q','J','X','9','8','7','6','5','4','3','2')
 
 def get_hand():
     hand = 0
@@ -117,9 +117,10 @@ def get_hand_from_string(string: str):
     card_strings = pair_off(string)
     for c in card_strings:
         rank = RANKS.index(c[0])
-        suit = RANKS.index(c[1])
-        hand |= suit << rank
-
+        suit = SUITS.index(c[1])
+        hand |= 1 << 3-suit << (12-rank)*4
+    return hand
+    
 def pair_off(string: str) -> list[str]:
     if len(string) == 0:
         return []
