@@ -1,4 +1,4 @@
-import math, random
+import random
 
 """
 Ranks
@@ -107,8 +107,6 @@ def get_string_from_hand(hand: int):
     hand_string = ""
     mask = 1 << 51
     for i in range(52):
-        print("{:0b}".format(mask))
-        print(i//4)
         if hand & mask:
             hand_string += RANKS[i//4] + SUITS[i%4]
         mask >>= 1
@@ -117,6 +115,10 @@ def get_string_from_hand(hand: int):
 def get_hand_from_string(string: str):
     hand = 0
     card_strings = pair_off(string)
+    for c in card_strings:
+        rank = RANKS.index(c[0])
+        suit = RANKS.index(c[1])
+        hand |= suit << rank
 
 def pair_off(string: str) -> list[str]:
     if len(string) == 0:
@@ -127,8 +129,3 @@ def pair_off(string: str) -> list[str]:
             pairs.append("")
         pairs[len(pairs)-1] += string[i]
     return pairs
-
-
-if __name__ == "__main__":
-    hand = 0xFFFFFFFFFFFFF
-    print(get_string_from_hand(hand))
