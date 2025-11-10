@@ -27,15 +27,15 @@ RANKS = ('A','K','Q','J','10','9','8','7','6','5','4','3','2')
 
 def get_hand():
     hand = 0
-    for i in range(5):
+    for _ in range(5):
         shift = random.randint(0, 51) 
         hand = hand | (1 << shift)
     return hand
     
-def get_n_of_kinds(hand):
+def get_n_of_kinds(hand: int):
     kicker_ranks = 0
     rank_mask = 0xF << 48
-    n_of_kinds = {4:[], 3:[], 2:[]}
+    n_of_kinds: dict[int, list[int]] = {4:[], 3:[], 2:[]}
     found = 0
     for i in range(13):
         rank = hand & rank_mask
@@ -49,7 +49,7 @@ def get_n_of_kinds(hand):
         rank_mask = rank_mask >> 4
     return (n_of_kinds, kicker_ranks)
 
-def get_straight(hand):
+def get_straight(hand: int):
     ranks = reduce_to_ranks(hand)
     straight_mask = 0x1F << 8
     for i in range(9):
@@ -58,20 +58,20 @@ def get_straight(hand):
         straight_mask = straight_mask >> 1
     return 0
 
-def get_flush(hand):
+def get_flush(hand: int):
     suit_mask = 0x8888888888888
-    for i in range(4):
+    for _ in range(4):
         suit = hand & suit_mask
         if suit.bit_count() >= 5:
             return reduce_to_ranks(hand)
         suit_mask = suit_mask >> 1
     return 0
 
-def get_high_card(hand):
+def get_high_card(hand: int):
     ranks = reduce_to_ranks(hand)
     return ranks.bit_length()-1
 
-def reduce_to_ranks(hand):
+def reduce_to_ranks(hand: int):
     rank_mask = 0xF << 48
     ranks = 0
     for i in range(13):
@@ -84,7 +84,7 @@ def reduce_to_ranks(hand):
     return ranks
 
 
-def rank_n_of_kinds(hand):
+def rank_n_of_kinds(hand: int):
     n_of_kinds, kicker_ranks = get_n_of_kinds(hand)
     rank = kicker_ranks
 
@@ -100,10 +100,10 @@ def rank_n_of_kinds(hand):
         rank |= (n_of_kinds[2][0] << PAIR_OFFSET)
 
 
-def get_full_bitmask(length):
+def get_full_bitmask(length: int):
     return int("1" * length, 2)
 
-def get_hand_string(hand):
+def get_string_from_hand(hand: int):
     hand_string = ""
     mask = 1 << 51
     for i in range(52):
@@ -114,6 +114,10 @@ def get_hand_string(hand):
         mask >>= 1
     return hand_string
 
+def get_hand_from_string(string: str):
+    hand = 0
+    cards = string.m
+
 if __name__ == "__main__":
     hand = 0xFFFFFFFFFFFFF
-    print(get_hand_string(hand))
+    print(get_string_from_hand(hand))
