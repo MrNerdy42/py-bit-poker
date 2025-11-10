@@ -116,7 +116,18 @@ def get_string_from_hand(hand: int):
 
 def get_hand_from_string(string: str):
     hand = 0
-    cards = string.m
+    card_strings = pair_off(string)
+
+def pair_off(string: str) -> list[str]:
+    if len(string) == 0:
+        return []
+    pairs: list[str] = []
+    for i in range(len(string)):
+        if i % 2 == 0:
+            pairs.append("")
+        pairs[len(pairs)-1] += string[i]
+    return pairs
+
 
 if __name__ == "__main__":
     hand = 0xFFFFFFFFFFFFF
