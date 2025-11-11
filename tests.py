@@ -26,14 +26,25 @@ class UtilityTests(unittest.TestCase):
         self.assertEqual(ranks, 0x1FFF)
 
 class GetNOfKindsTests(unittest.TestCase):
-    def test_get_one_pair(self):
-        pair = poker.get_hand_from_string("8♣8♠")
-        kickers = poker.get_hand_from_string("2♦A♥5♦")
-        kicker_ranks = poker.reduce_to_ranks(kickers)
-        hand = pair | kickers
-        result = poker.get_n_of_kinds(hand)
-        self.assertEqual(result, ({4:[], 3:[], 2:[6]}, kicker_ranks))
+    def setUp(self):
+        """
+        (hand, kickers, expected) 
+        """
+        self.test_cases: tuple[tuple[str, str, dict[int, list[int]]], ...]
+        self.test_cases = (
+            ("8♣8♠", "2♦A♥5♦", {4:[], 3:[], 2:[6]}),
+            ("A♣A♦2♥2♠", "X♥", {4:[], 3:[], 2:[12, 0]})
+        )
 
+    def test_get_n_of_kinds(self):
+        for c in self.test_cases:
+            with self.subTest(pair=c[0], kickers=c[1]):
+                pair = poker.get_hand_from_string(c[0])
+                kickers = poker.get_hand_from_string(c[1])
+                kicker_ranks = poker.reduce_to_ranks(kickers)
+                hand = pair | kickers
+                result = poker.get_n_of_kinds(hand)
+                self.assertEqual(result, (c[2], kicker_ranks))
 
 
 
