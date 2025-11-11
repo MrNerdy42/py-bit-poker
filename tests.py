@@ -33,7 +33,10 @@ class GetNOfKindsTests(unittest.TestCase):
         self.test_cases: tuple[tuple[str, str, dict[int, list[int]]], ...]
         self.test_cases = (
             ("8♣8♠", "2♦A♥5♦", {4:[], 3:[], 2:[6]}),
-            ("A♣A♦2♥2♠", "X♥", {4:[], 3:[], 2:[12, 0]})
+            ("A♣A♦2♥2♠", "X♥", {4:[], 3:[], 2:[12, 0]}),
+            ("K♣K♦K♠", "Q♥4♦", {4:[], 3:[11], 2:[]}),
+            ("7♦7♥7♠3♥3♠", "A♠", {4:[], 3:[5], 2:[1]}),
+            ("J♣J♦J♥J♠", "6♣", {4:[9], 3:[], 2:[]})
         )
 
     def test_get_n_of_kinds(self):
