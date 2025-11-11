@@ -32,7 +32,7 @@ class GetNOfKindsTests(unittest.TestCase):
         kicker_ranks = poker.reduce_to_ranks(kickers)
         hand = pair | kickers
         result = poker.get_n_of_kinds(hand)
-        self.assertEqual(result, ({4:[], 3:[], 2:[8]}, kicker_ranks))
+        self.assertEqual(result, ({4:[], 3:[], 2:[6]}, kicker_ranks))
 
 
 

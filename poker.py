@@ -33,20 +33,18 @@ def get_hand():
     return hand
     
 def get_n_of_kinds(hand: int):
-    kicker_ranks = 0
+    kicker_mask = 0xFFFFFFFFFFFFF
     rank_mask = 0xF << 48
     n_of_kinds: dict[int, list[int]] = {4:[], 3:[], 2:[]}
-    found = 0
     for i in range(13):
         rank = hand & rank_mask
         count = rank.bit_count()
         if count > 1:
-            n_of_kinds[count].append(13 - i)
-            kicker_ranks = kicker_ranks | rank_mask
-            found += 1
-            if count == 4 or found == 2:
-                break
-        rank_mask = rank_mask >> 4
+            n_of_kinds[count].append(12 - i)
+            kicker_mask = kicker_mask & ~rank_mask
+        rank_mask >>= 4
+    kickers = hand & kicker_mask
+    kicker_ranks = reduce_to_ranks(kickers)
     return (n_of_kinds, kicker_ranks)
 
 def get_straight(hand: int):
@@ -54,7 +52,7 @@ def get_straight(hand: int):
     straight_mask = 0x1F << 8
     for i in range(9):
         if ranks & straight_mask == straight_mask:
-            return 13 - i
+            return 12 - i
         straight_mask = straight_mask >> 1
     return 0
 
@@ -89,19 +87,15 @@ def rank_n_of_kinds(hand: int):
     rank = kicker_ranks
 
     if n_of_kinds[4]:
-        rank |= (n_of_kinds[4][0] << FOUR_OF_KIND_OFFSET)
+        rank |= n_of_kinds[4][0] << FOUR_OF_KIND_OFFSET
     elif n_of_kinds[3] and n_of_kinds[2]:
-        rank |= (n_of_kinds[3][0] << FULL_HOUSE_THREE_OFFSET)
-        rank |= (n_of_kinds[2][0] << PAIR_OFFSET)
+        rank |= n_of_kinds[3][0] << FULL_HOUSE_THREE_OFFSET
+        rank |= n_of_kinds[2][0] << PAIR_OFFSET
     elif len(n_of_kinds[2]) == 2:
-        rank |= (n_of_kinds[2][0] << TWO_PAIR_OFFSET)
-        rank |= (n_of_kinds[2][1] << PAIR_OFFSET)
+        rank |= n_of_kinds[2][0] << TWO_PAIR_OFFSET
+        rank |= n_of_kinds[2][1] << PAIR_OFFSET
     else:
-        rank |= (n_of_kinds[2][0] << PAIR_OFFSET)
-
-
-def get_full_bitmask(length: int):
-    return int("1" * length, 2)
+        rank |= n_of_kinds[2][0] << PAIR_OFFSET
 
 def get_string_from_hand(hand: int):
     hand_string = ""
